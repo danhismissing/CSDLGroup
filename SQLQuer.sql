@@ -1,13 +1,14 @@
 
-create database ER
+create database PHOTOBOOTHMANAGE
 go
-use [ER]
+use PHOTOBOOTHMANAGE
+
 create table person(
 PersonId nvarchar (50) primary key,
 FullName nvarchar(50) not null,
 Gender nvarchar(10) not null,
 BirthDay date not null,
-PhoneNumber char (9) 
+PhoneNumber char (10) 
 );
 go 
 create table employee(
@@ -17,7 +18,7 @@ Salary int not null
 go
 create table customer(
 CustomerId nvarchar(50) primary key,
-RewardsPoint int not null
+RewardsPoint int not null default 0
 );
 go
 create table store(
@@ -27,16 +28,18 @@ Address nvarchar (50) not null,
 ManagerId nvarchar(50) not null
 );
 go
+
 create table frame (
 FrameId nvarchar(50) primary key,
 FrameName nvarchar(50) not null,
-Price int
+Price int not null 
 );
 go
+
 create table work_shift(
 ShiftId nvarchar (50) primary key ,
-StartDate date not null,
-EndDate date not null
+StartTime time  not null,
+EndTime time  not null
 );
 go
 create table booth(
@@ -46,22 +49,26 @@ BackGroundColor nvarchar (50) not null,
 Status nvarchar (50) not null
 );
 go
+
 create table photo_session(
 SessionId nvarchar(50) primary key,
-SessionTime int not null,
+SessionTime datetime  not null,
 Price int not null,
 CustomerId nvarchar (50) not null,
 EmployeeId nvarchar(50) not null,
 ShiftId nvarchar(50) not null,
-BoothId nvarchar(50) not null
+BoothId nvarchar(50) not null,
+PointUsed int not null default 0
 );
 go
+
 create table about(
 SessionId nvarchar (50) not null,
 FrameId nvarchar (50) not null,
-NumberPrint nvarchar(10),
+NumberPrint int  not null,
 primary key (SessionId, FrameID)
 );
+
 go
 create table collab_frame(
 FrameID nvarchar(50) primary key ,
@@ -70,27 +77,31 @@ StartDate date not null ,
 EndDate date not null
 );
 go
+
 create table basic_frame(
 FrameId nvarchar (50) primary key,
 PrimaryColor nvarchar(50) not null 
 );
 go
+
 create table file_digital(
 SessionId nvarchar (50) not null,
 FileNumber nvarchar (50) not null,
 FileType nvarchar(50) not null,
 FileSize nvarchar(50) not null,
-LinkDownload nvarchar(50) not null,
+LinkDownload nvarchar(500) not null,
 primary key (SessionId, FileNumber)
 );
 go
-create table work(
+
+create table works(
 EmployeeId nvarchar (50) not null,
 ShiftId nvarchar (50) not null,
 WorkDate date not null,
 primary key (EmployeeId, ShiftId)
 );
 go
+
 ALTER TABLE employee
 add constraint FK_EmployeeId Foreign key (EmployeeId) references person (PersonId);
 ALTER TABLE customer
@@ -113,8 +124,8 @@ ALTER TABLE basic_frame
 add constraint _FrameId Foreign key (FrameId) references frame (FrameId);
 ALTER TABLE file_digital
 add constraint _SessionId Foreign key (SessionId) references photo_session (SessionId);
-ALTER TABLE work
+ALTER TABLE works
 add constraint K_EmployeeId Foreign key (EmployeeId) references employee (EmployeeId),
 constraint F_ShiftId Foreign key (ShiftId) references work_shift (ShiftId);
 
-go
+
