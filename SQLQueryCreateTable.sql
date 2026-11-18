@@ -98,7 +98,7 @@ create table works(
 EmployeeId nvarchar (50) not null,
 ShiftId nvarchar (50) not null,
 WorkDate date not null,
-primary key (EmployeeId, ShiftId)
+primary key (EmployeeId, ShiftId, WorkDate)
 );
 go
 
